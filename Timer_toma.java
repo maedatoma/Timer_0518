@@ -18,16 +18,19 @@ public class Timer_toma extends JFrame implements ActionListener{
 	JPanel panel_Button;		// ボタン panel
 	JPanel panel_Img;			// 画像表示 panel
 	JLabel label_Title;
-	JTextField tfield_Min;		// 分入力欄
+	JTextField tfield_Min;		// "分"入力欄
 	JLabel text_Colon;
-	JLabel label_Sec;
+	SpinnerNumberModel model;	// スピナーの設定
+	JSpinner jspin_Sec;			// "秒"スピナー
+	JTextField jspin_Sec_setting;
 	JLabel label_Time;			// 時間の表示場所
 	JLabel label_Fin;			// 終了メッセージ
 	JLabel label_Img;
 	ImageIcon icon;
-	int sec;					// 秒
 	int min;					// 分
+	int sec;					// 秒
 	int get_Min;				// 入力された分を取得する変数
+	Integer get_Sec;			// 選択された秒を取得する変数
 	JButton btn_Start;
 
 	// method
@@ -52,15 +55,19 @@ public class Timer_toma extends JFrame implements ActionListener{
 	public Timer_toma(){
 		// ラベルを生成
 		label_Title = new JLabel("時間を入力してください(半角数字のみ)→");
-		label_Time = new JLabel("0:00");
+		label_Time = new JLabel();
 		label_Time.setFont( new Font("", Font.BOLD, 30 ) );
 		label_Fin = new JLabel();
 
 		// テキストフィールド(入力欄)を生成
-		tfield_Min = new JTextField("3");
+		tfield_Min = new JTextField("0");
 		tfield_Min.setColumns( 2 );		// 入力欄の大きさ
 		text_Colon = new JLabel(":");
-		label_Sec = new JLabel("00");
+		model = new SpinnerNumberModel( 59, 0, 59, 1 );
+		jspin_Sec = new JSpinner( model );
+		jspin_Sec.setPreferredSize( new Dimension( 40, 20 ) );	// 大きさ
+		jspin_Sec_setting = ( ( JSpinner.NumberEditor ) jspin_Sec.getEditor() ).getTextField();
+		jspin_Sec_setting.setEditable(false);
 
 		// ボタンを生成
 		btn_Start = new JButton("Start");
@@ -73,20 +80,24 @@ public class Timer_toma extends JFrame implements ActionListener{
 			panel_Title.add( label_Title );
 			panel_Title.add( tfield_Min );
 			panel_Title.add( text_Colon );
-			panel_Title.add( label_Sec );
+			panel_Title.add( jspin_Sec );
 
 			// 時間表示 panel
 			panel_TimeLabel = new JPanel();
 			panel_TimeLabel.add( label_Time );
 
+			// 画像表示 panel
+			panel_Img = new JPanel();
+
+			// ボタン panel
+			panel_Button = new JPanel();
+
 		// アイコンの設定
-		panel_Img = new JPanel();
 		label_Img = new JLabel();
 		icon = new ImageIcon("img/cup_noodle.png");
 		label_Img.setIcon( icon );
 		panel_Img.add( label_Img );
 
-		panel_Button = new JPanel();
 		panel_Button.add( btn_Start );
 		panel_Button.add( label_Fin );
 
@@ -107,17 +118,20 @@ public class Timer_toma extends JFrame implements ActionListener{
 
 		// ボタンが押された時の処理
 		if( ae_Cmd.equals("start") ){
-			// 秒を指定
-			sec = 0;
 			// 入力された分を取得する
 			get_Min = Integer.parseInt( tfield_Min.getText() );
+			// 入力された秒を取得する
+			get_Sec = (Integer)model.getValue();
 			// 分を指定
 			min = 0;
+			// 秒を指定
+			sec = 0;
 			// タイマーをスタートさせる
 			timer.start();
 			// ボタン,入力欄を押せないようにする
 			btn_Start.setEnabled(false);
 			tfield_Min.setEnabled(false);
+			jspin_Sec.setEnabled(false);
 			// 時間を表示
 			label_Time.setText( min + ":" + "0" + sec );
 			// 終了メッセージを削除
@@ -145,14 +159,17 @@ public class Timer_toma extends JFrame implements ActionListener{
 		}
 
 		// 入力した分だけ時間が経過したら
-		if( min >= get_Min && sec == 1 ){
-			// 終了メッセージの表示
-			label_Fin.setText( get_Min + "分経過しました");
+		if( min >= get_Min && sec >= get_Sec ){
 			// タイマーを停止
 			timer.stop();
+			// 終了メッセージの表示
+			label_Fin.setText( get_Min + "分" + get_Sec + "秒経過しました");
 			// ボタン,入力欄を押せるようにする
 			btn_Start.setEnabled(true);
 			tfield_Min.setEnabled(true);
+			jspin_Sec.setEnabled(true);
+			// ボタンの文字を変更
+			btn_Start.setText("もう一度");
 		}
 	}
 }
