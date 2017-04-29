@@ -29,8 +29,8 @@ public class Timer_toma extends JFrame implements ActionListener{
 	ImageIcon icon;
 	int min;					// 分
 	int sec;					// 秒
-	int get_Min;				// 入力された分を取得する変数
-	Integer get_Sec;			// 選択された秒を取得する変数
+	int get_Min;				// 入力された"分"を取得する変数
+	int get_Sec;				// 選択された"秒"を取得する変数
 	JButton btn_Start;
 
 	// method
@@ -60,10 +60,10 @@ public class Timer_toma extends JFrame implements ActionListener{
 		label_Fin = new JLabel();
 
 		// テキストフィールド(入力欄)を生成
-		tfield_Min = new JTextField("0");
+		tfield_Min = new JTextField("3");
 		tfield_Min.setColumns( 2 );		// 入力欄の大きさ
 		text_Colon = new JLabel(":");
-		model = new SpinnerNumberModel( 59, 0, 59, 1 );
+		model = new SpinnerNumberModel( 0, 0, 59, 1 );
 		jspin_Sec = new JSpinner( model );
 		jspin_Sec.setPreferredSize( new Dimension( 40, 20 ) );	// 大きさ
 		jspin_Sec_setting = ( ( JSpinner.NumberEditor ) jspin_Sec.getEditor() ).getTextField();
@@ -88,18 +88,16 @@ public class Timer_toma extends JFrame implements ActionListener{
 
 			// 画像表示 panel
 			panel_Img = new JPanel();
+			// アイコンの設定
+			label_Img = new JLabel();
+			icon = new ImageIcon("img/cup_noodle.png");
+			label_Img.setIcon( icon );
+			panel_Img.add( label_Img );
 
 			// ボタン panel
 			panel_Button = new JPanel();
-
-		// アイコンの設定
-		label_Img = new JLabel();
-		icon = new ImageIcon("img/cup_noodle.png");
-		label_Img.setIcon( icon );
-		panel_Img.add( label_Img );
-
-		panel_Button.add( btn_Start );
-		panel_Button.add( label_Fin );
+			panel_Button.add( btn_Start );
+			panel_Button.add( label_Fin );
 
 		// タイマーを生成
 		timer = new Timer( 1000, this );
@@ -146,20 +144,33 @@ public class Timer_toma extends JFrame implements ActionListener{
 			if( sec < 10 ){
 				label_Time.setText( min + ":" + "0" + sec );
 			}
-			// 秒を増やす
+			// "秒"を増やす
 			sec++;
 		}
 
-		// 60秒( 1分 )経過したら
-		if( sec >= 60 ){
-			// 秒を "0" に戻す
+		// 60秒( 1分 )経過したら( 入力した"分"が"1"以上の時 )
+		if( sec >= 60 && get_Min >= 1 ){
+			// "秒"を "0" に戻す
 			sec = 0;
-			// 分を増やす
+			// "分"を増やす
 			min++;
 		}
 
-		// 入力した分だけ時間が経過したら
-		if( min >= get_Min && sec >= get_Sec ){
+		// 設定した時間が経過した時( 入力した"分"が"0"だった時 )
+		if( get_Min == min && sec - get_Sec == 1 ){
+			// タイマーを停止
+			timer.stop();
+			// 終了メッセージの表示
+			label_Fin.setText( get_Min + "分" + get_Sec + "秒経過しました");
+			// ボタン,入力欄を押せるようにする
+			btn_Start.setEnabled(true);
+			tfield_Min.setEnabled(true);
+			jspin_Sec.setEnabled(true);
+			// ボタンの文字を変更
+			btn_Start.setText("もう一度");
+
+		// 設定した時間が経過した時( 入力した"分"が"1"以上だった時 )
+		} else if( get_Min < min && sec < get_Sec - 1 ){
 			// タイマーを停止
 			timer.stop();
 			// 終了メッセージの表示
