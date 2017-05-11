@@ -116,24 +116,28 @@ public class Timer_toma extends JFrame implements ActionListener{
 
 		// ボタンが押された時の処理
 		if( ae_Cmd.equals("start") ){
-			// 入力された分を取得する
-			get_Min = Integer.parseInt( tfield_Min.getText() );
-			// 入力された秒を取得する
-			get_Sec = (Integer)model.getValue();
-			// 分を指定
-			min = 0;
-			// 秒を指定
-			sec = 0;
-			// タイマーをスタートさせる
-			timer.start();
-			// ボタン,入力欄を押せないようにする
-			btn_Start.setEnabled(false);
-			tfield_Min.setEnabled(false);
-			jspin_Sec.setEnabled(false);
-			// 時間を表示
-			label_Time.setText( min + ":" + "0" + sec );
-			// 終了メッセージを削除
-			label_Fin.setText("");
+			try{
+				// 入力された分を取得する
+				get_Min = Integer.parseInt( tfield_Min.getText() );
+				// 入力された秒を取得する
+				get_Sec = (Integer)model.getValue();
+				// 分を指定
+				min = 0;
+				// 秒を指定
+				sec = 0;
+				// タイマーをスタートさせる
+				timer.start();
+				// ボタン,入力欄を押せないようにする
+				btn_Start.setEnabled(false);
+				tfield_Min.setEnabled(false);
+				jspin_Sec.setEnabled(false);
+				// 時間を表示
+				label_Time.setText( min + ":" + "0" + sec );
+				// 終了メッセージを削除
+				label_Fin.setText("");
+			} catch( NumberFormatException e ){
+				JOptionPane.showMessageDialog( this, "数値を入力してください");
+			}
 		}
 
 		// 時間のカウントの処理
