@@ -58,7 +58,7 @@ public class Timer_toma extends JFrame implements ActionListener{
 		// ラベルを生成
 		label_Title = new JLabel("時間を入力してください(半角数字のみ)→");
 		label_Time = new JLabel();
-		label_Time.setFont( new Font("", Font.BOLD, 30 ) );
+		label_Time.setFont( new Font("", Font.BOLD, 64 ) );
 		label_Fin = new JLabel();
 
 		// テキストフィールド(入力欄)を生成
