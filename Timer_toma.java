@@ -1,4 +1,5 @@
 // Timer_toma.java
+// 名前: ラーメンタイマー
 /* 要件
 	- 3分間の時間を計測するタイマーを作る( Timer )
 		- 必要な機能
@@ -32,6 +33,7 @@ public class Timer_toma extends JFrame implements ActionListener{
 	int get_Min;				// 入力された"分"を取得する変数
 	int get_Sec;				// 選択された"秒"を取得する変数
 	JButton btn_Start;
+	JButton btn_End;
 
 	// method
 	public static void main(String[] args) {
@@ -39,7 +41,7 @@ public class Timer_toma extends JFrame implements ActionListener{
 		Timer_toma frame_Main = new Timer_toma();
 
 		// window の名前
-		frame_Main.setTitle("ラーメンTimer");
+		frame_Main.setTitle("ラーメンタイマー by toma_m");
 		// window の表示場所
 		frame_Main.setLocation( 512, 200 );
 		// window の大きさ
@@ -73,6 +75,9 @@ public class Timer_toma extends JFrame implements ActionListener{
 		btn_Start = new JButton("Start");
 		btn_Start.setActionCommand("start");
 		btn_Start.addActionListener(this);
+		btn_End = new JButton("End");
+		btn_End.setActionCommand("end");
+		btn_End.addActionListener(this);
 
 		// パネルを生成
 			// タイトル panel
@@ -97,6 +102,7 @@ public class Timer_toma extends JFrame implements ActionListener{
 			// ボタン panel
 			panel_Button = new JPanel();
 			panel_Button.add( btn_Start );
+			panel_Button.add( btn_End );
 			panel_Button.add( label_Fin );
 
 		// タイマーを生成
@@ -116,6 +122,7 @@ public class Timer_toma extends JFrame implements ActionListener{
 
 		// ボタンが押された時の処理
 		if( ae_Cmd.equals("start") ){
+			// 入力された内容が半角数字の場合
 			try{
 				// 入力された分を取得する
 				get_Min = Integer.parseInt( tfield_Min.getText() );
@@ -127,16 +134,21 @@ public class Timer_toma extends JFrame implements ActionListener{
 				sec = 0;
 				// タイマーをスタートさせる
 				timer.start();
-				// ボタン,入力欄を押せないようにする
-				btn_Start.setEnabled(false);
+				// 入力欄,ボタンを押せないようにする
 				tfield_Min.setEnabled(false);
 				jspin_Sec.setEnabled(false);
+				btn_Start.setEnabled(false);
+				btn_End.setEnabled(false);
 				// 時間を表示
 				label_Time.setText( min + ":" + "0" + sec );
 				// 終了メッセージを削除
 				label_Fin.setText("");
+
+			// それ以外の場合
 			} catch( NumberFormatException e ){
-				JOptionPane.showMessageDialog( this, "数値を入力してください");
+				String err_Msg = "半角数字を入力してください";
+				String err_Winname = "Error";
+				JOptionPane.showMessageDialog( this, err_Msg, err_Winname, JOptionPane.ERROR_MESSAGE );
 			}
 		}
 
@@ -166,10 +178,11 @@ public class Timer_toma extends JFrame implements ActionListener{
 			timer.stop();
 			// 終了メッセージの表示
 			label_Fin.setText( get_Min + "分" + get_Sec + "秒経過しました");
-			// ボタン,入力欄を押せるようにする
-			btn_Start.setEnabled(true);
+			// 入力欄,ボタンを押せるようにする
 			tfield_Min.setEnabled(true);
 			jspin_Sec.setEnabled(true);
+			btn_Start.setEnabled(true);
+			btn_End.setEnabled(true);
 			// ボタンの文字を変更
 			btn_Start.setText("もう一度");
 
@@ -179,12 +192,18 @@ public class Timer_toma extends JFrame implements ActionListener{
 			timer.stop();
 			// 終了メッセージの表示
 			label_Fin.setText( get_Min + "分" + get_Sec + "秒経過しました");
-			// ボタン,入力欄を押せるようにする
-			btn_Start.setEnabled(true);
+			// 入力欄,ボタンを押せるようにする
 			tfield_Min.setEnabled(true);
 			jspin_Sec.setEnabled(true);
+			btn_Start.setEnabled(true);
+			btn_End.setEnabled(true);
 			// ボタンの文字を変更
 			btn_Start.setText("もう一度");
+		}
+
+		// 終了ボタンが押された時
+		if( ae_Cmd.equals("end") ){
+			System.exit(1);			
 		}
 	}
 }
